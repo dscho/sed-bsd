@@ -1,7 +1,7 @@
 all: sed
 
 sed: compile.c main.c misc.c process.c
-	$(CC) -o $@ $^ $(shell pkg-config --cflags --libs libbsd-overlay) -D_GNU_SOURCE $(CFLAGS)
+	$(CC) '-D__FBSDID(x)=' -o $@ $^ $(shell pkg-config --cflags --libs libbsd-overlay) -D_GNU_SOURCE $(CFLAGS)
 
 install: all
 	install -d $(DESTDIR)/usr/bin

@@ -218,6 +218,8 @@ main(int argc, char *argv[])
 	exit(rval);
 }
 
+#define getprogname() "sed"
+
 static void
 usage(void)
 {
@@ -328,6 +330,32 @@ again:
 	/* NOTREACHED */
 	return (NULL);
 }
+
+size_t _strlcpy(char *dest, const char *src, size_t size)
+{
+	size_t ret = strlen(src);
+
+	if (size) {
+		size_t len = (ret >= size) ? size - 1 : ret;
+		memcpy(dest, src, len);
+		dest[len] = '\0';
+	}
+	return ret;
+}
+#define strlcpy _strlcpy
+
+size_t _strlcat(char *dest, const char *src, size_t size)
+{
+	size_t l = strlen(dest), ret = strlen(src);
+
+	if (size && ret && size > l + 1) {
+		size_t len = (l + ret >= size) ? size - l - 1 : ret;
+		memcpy(dest + l, src, len);
+		dest[l + len] = '\0';
+	}
+	return ret;
+}
+#define strlcat _strlcat
 
 /*
  * Like fgets, but go through the list of files chaining them together.
